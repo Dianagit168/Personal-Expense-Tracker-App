@@ -5,23 +5,41 @@ import 'package:personal_expense_tracker_app/datas/expanse_datas.dart';
 import 'package:personal_expense_tracker_app/models/expense_items.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final newExpNameController = TextEditingController();
-    final newExpDollarController = TextEditingController();
-    final newExpCentController = TextEditingController();
-    //
-    void clear() {
-      newExpDollarController.clear();
-      newExpNameController.clear();
-      newExpCentController.clear();
-    }
+  State<HomePage> createState() => _HomePageState();
+}
 
-    // save
-    void save() {
+class _HomePageState extends State<HomePage> {
+  final newExpNameController = TextEditingController();
+  final newExpDollarController = TextEditingController();
+  final newExpCentController = TextEditingController();
+
+  @override
+  void initState() {
+    context.read<ExpanseDatasProvider>().prepareData();
+    super.initState();
+  }
+
+  //
+  void clear() {
+    newExpDollarController.clear();
+    newExpNameController.clear();
+    newExpCentController.clear();
+  }
+
+  // delete
+  void deleteExpense(ExpenseItemsModel expense) {
+    context.read<ExpanseDatasProvider>().deleteExpense(expense);
+  }
+
+  // save
+  void save() {
+    if (newExpCentController.text.isNotEmpty &&
+        newExpDollarController.text.isNotEmpty &&
+        newExpNameController.text.isNotEmpty) {
       String amount =
           '${newExpDollarController.text}.${newExpCentController.text}';
 
@@ -31,61 +49,61 @@ class HomePage extends StatelessWidget {
         dateTime: DateTime.now(),
       );
       context.read<ExpanseDatasProvider>().addNewExpense(newExpense);
-      // Provider.of<ExpanseDatasProvider>(
-      //   context,
-      //   listen: false,
-      // ).addNewExpense(newExpense);
-      clear();
-      Navigator.pop(context);
     }
 
-    // cancel
-    void cancel() {
-      clear();
-      Navigator.pop(context);
-    }
+    clear();
+    Navigator.pop(context);
+  }
 
-    //
-    void addNewexpense() {
-      showDialog(
-        context: context,
-        builder:
-            (context) => AlertDialog(
-              title: Text('Add new expense'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: newExpNameController,
-                    decoration: InputDecoration(hintText: 'Expense Name'),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: newExpDollarController,
-                          decoration: InputDecoration(hintText: 'Dollars'),
-                        ),
-                      ),
+  // cancel
+  void cancel() {
+    clear();
+    Navigator.pop(context);
+  }
 
-                      Expanded(
-                        child: TextField(
-                          controller: newExpCentController,
-                          decoration: InputDecoration(hintText: 'Cents'),
-                        ),
+  //
+  void addNewexpense() {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text('Add new expense'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: newExpNameController,
+                  decoration: InputDecoration(hintText: 'Expense Name'),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: newExpDollarController,
+                        decoration: InputDecoration(hintText: 'Dollars'),
                       ),
-                    ],
-                  ),
-                ],
-              ),
-              actions: [
-                MaterialButton(onPressed: save, child: Text('Save')),
-                MaterialButton(onPressed: cancel, child: Text('Cancel')),
+                    ),
+
+                    Expanded(
+                      child: TextField(
+                        controller: newExpCentController,
+                        decoration: InputDecoration(hintText: 'Cents'),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
-      );
-    }
+            actions: [
+              MaterialButton(onPressed: save, child: Text('Save')),
+              MaterialButton(onPressed: cancel, child: Text('Cancel')),
+            ],
+          ),
+    );
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Consumer<ExpanseDatasProvider>(
       builder: (
         BuildContext context,
@@ -111,6 +129,8 @@ class HomePage extends StatelessWidget {
                     name: value.getAllExpenseLists()[index].name!,
                     amount: value.getAllExpenseLists()[index].amount,
                     dateTime: value.getAllExpenseLists()[index].dateTime,
+                    deleteExpense:
+                        () => deleteExpense(value.getAllExpenseLists()[index]),
                   );
                 },
               ),

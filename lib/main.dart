@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:personal_expense_tracker_app/datas/expanse_datas.dart';
 import 'package:personal_expense_tracker_app/pages/home_page.dart';
 import 'package:personal_expense_tracker_app/pages/login_page.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  await Hive.openBox("expense_database");
   runApp(
     ChangeNotifierProvider(
       create: (context) => ExpanseDatasProvider(),

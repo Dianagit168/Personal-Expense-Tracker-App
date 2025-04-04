@@ -4,12 +4,28 @@ class ExpenseTile extends StatelessWidget {
   final String? name;
   final String? amount;
   final DateTime? dateTime;
-  const ExpenseTile({super.key, this.name, this.amount, this.dateTime});
+  final void Function() deleteExpense;
+
+  const ExpenseTile({
+    super.key,
+    this.name,
+    this.amount,
+    this.dateTime,
+    required this.deleteExpense,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(name!),
+      title: Row(
+        children: [
+          Text(name!),
+          IconButton(
+            onPressed: deleteExpense,
+            icon: Icon(Icons.delete, color: Colors.red),
+          ),
+        ],
+      ),
       subtitle: Text('${dateTime!.day}/${dateTime!.month}/${dateTime!.year}'),
       trailing: Text('\$${amount!}'),
     );

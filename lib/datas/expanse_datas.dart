@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:personal_expense_tracker_app/datas/hive_database.dart';
 import 'package:personal_expense_tracker_app/datetime/date_time_helper.dart';
 import 'package:personal_expense_tracker_app/models/expense_items.dart';
 
@@ -11,15 +12,25 @@ class ExpanseDatasProvider with ChangeNotifier {
     return overallExpenseList;
   }
 
+  // Prepare data to display
+  final db = HiveDatabase();
+  void prepareData() {
+    if (db.readData().isNotEmpty) {
+      overallExpenseList = db.readData();
+    }
+  }
+
   // add new expense
   void addNewExpense(ExpenseItemsModel newExpense) {
     overallExpenseList.add(newExpense);
+    db.saveData(overallExpenseList);
     notifyListeners();
   }
 
   // delete expense
-  void deleteNewExpense(ExpenseItemsModel expense) {
+  void deleteExpense(ExpenseItemsModel expense) {
     overallExpenseList.remove(expense);
+    db.saveData(overallExpenseList);
     notifyListeners();
   }
 
