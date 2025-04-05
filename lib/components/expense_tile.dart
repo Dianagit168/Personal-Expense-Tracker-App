@@ -16,18 +16,23 @@ class ExpenseTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Row(
-        children: [
-          Text(name!),
-          IconButton(
-            onPressed: deleteExpense,
-            icon: Icon(Icons.delete, color: Colors.red),
-          ),
-        ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: ListTile(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        tileColor: Colors.blue,
+        title: Row(
+          children: [
+            Text(name!),
+            IconButton(
+              onPressed: deleteExpense,
+              icon: Icon(Icons.delete, color: Colors.red),
+            ),
+          ],
+        ),
+        subtitle: Text('${dateTime!.day}/${dateTime!.month}/${dateTime!.year}'),
+        trailing: Text('\$${amount!}'),
       ),
-      subtitle: Text('${dateTime!.day}/${dateTime!.month}/${dateTime!.year}'),
-      trailing: Text('\$${amount!}'),
     );
   }
 }

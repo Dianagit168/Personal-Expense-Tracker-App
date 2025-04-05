@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:personal_expense_tracker_app/auth/auth_service.dart';
 import 'package:personal_expense_tracker_app/components/expense_summary.dart';
 import 'package:personal_expense_tracker_app/components/expense_tile.dart';
 import 'package:personal_expense_tracker_app/datas/expanse_datas.dart';
@@ -61,6 +63,13 @@ class _HomePageState extends State<HomePage> {
     Navigator.pop(context);
   }
 
+  //Signout
+
+  void signUserOut() {
+    final auth = AuthService();
+    auth.signOut();
+  }
+
   //
   void addNewexpense() {
     showDialog(
@@ -110,31 +119,48 @@ class _HomePageState extends State<HomePage> {
         ExpanseDatasProvider value,
         Widget? child,
       ) {
-        return Scaffold(
-          floatingActionButton: FloatingActionButton(
-            onPressed: addNewexpense,
-            child: Icon(Icons.add),
-          ),
-          body: ListView(
-            children: [
-              ExpenseSummary(startOfWeek: value.startOfWeekDate()),
+        return SafeArea(
+          child: Scaffold(
+            appBar: AppBar(
+              actions: [
+                ElevatedButton(onPressed: signUserOut, child: Text("Sign Out")),
+                //IconButton(onPressed: signUserOut, icon: Icon(Icons.logout)),
+              ],
+            ),
+            backgroundColor: Colors.grey[300],
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: Colors.blue,
+              onPressed: addNewexpense,
+              child: Icon(Icons.add, color: Colors.white),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ListView(
+                children: [
+                  //================== Bar Chart =====================
+                  ExpenseSummary(startOfWeek: value.startOfWeekDate()),
 
-              //=======================================
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: value.getAllExpenseLists().length,
-                itemBuilder: (context, index) {
-                  return ExpenseTile(
-                    name: value.getAllExpenseLists()[index].name!,
-                    amount: value.getAllExpenseLists()[index].amount,
-                    dateTime: value.getAllExpenseLists()[index].dateTime,
-                    deleteExpense:
-                        () => deleteExpense(value.getAllExpenseLists()[index]),
-                  );
-                },
+                  SizedBox(height: 30),
+                  //================== List of Expenses =====================
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: value.getAllExpenseLists().length,
+                    itemBuilder: (context, index) {
+                      return ExpenseTile(
+                        name: value.getAllExpenseLists()[index].name!,
+                        amount: value.getAllExpenseLists()[index].amount,
+                        dateTime: value.getAllExpenseLists()[index].dateTime,
+                        deleteExpense:
+                            () => deleteExpense(
+                              value.getAllExpenseLists()[index],
+                            ),
+                      );
+                    },
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         );
       },

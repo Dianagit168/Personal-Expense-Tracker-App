@@ -1,26 +1,37 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker_app/auth/auth_service.dart';
-import 'package:personal_expense_tracker_app/pages/signup_page.dart';
+import 'package:personal_expense_tracker_app/pages/login_page.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class SignUpPage extends StatelessWidget {
+  SignUpPage({super.key, this.onTap});
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  final conPasswordController = TextEditingController();
+  final void Function()? onTap;
 
-  void signInUser(BuildContext context) async {
-    final authService = AuthService();
-    try {
-      await authService.signIn(
-        usernameController.text,
-        passwordController.text,
-      );
-    } catch (e) {
+  void signUp(BuildContext context) async {
+    final auth = AuthService();
+    if (passwordController.text == conPasswordController.text) {
+      try {
+        await auth.signUp(usernameController.text, passwordController.text);
+      } catch (e) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(title: Text(e.toString())),
+        );
+      }
+    } else {
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(title: Text(e.toString())),
+        builder:
+            (context) => AlertDialog(title: Text('Password don not matchs!')),
       );
     }
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: usernameController.text,
+      password: passwordController.text,
+    );
   }
 
   @override
@@ -40,12 +51,11 @@ class LoginPage extends StatelessWidget {
                   Icon(Icons.lock, size: 100),
                   SizedBox(height: 50),
                   Text(
-                    'Welcome',
-                    //     'Welcome back you\'ve been missed!'
+                    'Welcome back you\'ve been missed!',
                     style: TextStyle(
                       color: Colors.grey[700],
                       fontWeight: FontWeight.bold,
-                      fontSize: 35,
+                      //fontSize: 35,
                     ),
                   ),
                   SizedBox(height: 25),
@@ -63,28 +73,28 @@ class LoginPage extends StatelessWidget {
                     decoration: InputDecoration(hintText: 'Password'),
                     controller: passwordController,
                   ),
-                  // MyTextfield(
-                  //   obscureText: true,
-                  //   hintText: 'Password',
-                  //   controller: passwordController,
-                  // ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Forgot Password?',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                  SizedBox(height: 25),
+                  TextField(
+                    decoration: InputDecoration(hintText: 'Confirm Password'),
+                    controller: conPasswordController,
                   ),
+                  SizedBox(height: 10),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.end,
+                  //   children: [
+                  //     Text(
+                  //       'Forgot Password?',
+                  //       style: TextStyle(
+                  //         color: Colors.grey[600],
+                  //         fontWeight: FontWeight.bold,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   SizedBox(height: 25),
                   ElevatedButton(
-                    onPressed: () => signInUser(context),
-                    child: Text("Sign In"),
+                    onPressed: () => signUp(context),
+                    child: Text("Sign Up"),
                   ),
                   //TextButton(onPressed: signInUser, child: Text('Sign In')),
                   // MyButton(
@@ -122,17 +132,17 @@ class LoginPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Not a member?'),
+                      Text('You are member?'),
                       SizedBox(width: 4),
                       TextButton(
                         onPressed:
                             () => Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SignUpPage(),
+                                builder: (context) => LoginPage(),
                               ),
                             ),
-                        child: Text('Register now'),
+                        child: Text('Log In'),
                       ),
                     ],
                   ),
