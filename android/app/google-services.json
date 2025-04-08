@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "186158273109",
-    "project_id": "personal-expense-tracker-24040",
-    "storage_bucket": "personal-expense-tracker-24040.firebasestorage.app"
+    "project_number": "272547160650",
+    "project_id": "personal-expanse-tracker",
+    "storage_bucket": "personal-expanse-tracker.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:186158273109:android:6b912409bcc063ba21fadc",
+        "mobilesdk_app_id": "1:272547160650:android:67cc032201a4f8482bbcb3",
         "android_client_info": {
           "package_name": "com.example.personal_expense_tracker_app"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC_S03Dghz6GsOW4e5JfN2nn4FjlCUmBAg"
+          "current_key": "AIzaSyDKe7UTkGC_IXcwzBzLVGqsQK__rFeIBCc"
         }
       ],
       "services": {

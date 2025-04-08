@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker_app/auth/auth_service.dart';
 import 'package:personal_expense_tracker_app/components/expense_summary.dart';
@@ -65,7 +64,7 @@ class _HomePageState extends State<HomePage> {
 
   //Signout
 
-  void signUserOut() {
+  void logOut() {
     final auth = AuthService();
     auth.signOut();
   }
@@ -123,7 +122,7 @@ class _HomePageState extends State<HomePage> {
           child: Scaffold(
             appBar: AppBar(
               actions: [
-                ElevatedButton(onPressed: signUserOut, child: Text("Sign Out")),
+                ElevatedButton(onPressed: logOut, child: Text("Sign Out")),
                 //IconButton(onPressed: signUserOut, icon: Icon(Icons.logout)),
               ],
             ),

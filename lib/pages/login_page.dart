@@ -1,20 +1,17 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker_app/auth/auth_service.dart';
+
 import 'package:personal_expense_tracker_app/pages/signup_page.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   void signInUser(BuildContext context) async {
     final authService = AuthService();
     try {
-      await authService.signIn(
-        usernameController.text,
-        passwordController.text,
-      );
+      await authService.signIn(emailController.text, passwordController.text);
     } catch (e) {
       showDialog(
         context: context,
@@ -22,6 +19,12 @@ class LoginPage extends StatelessWidget {
       );
     }
   }
+  // void signInUser() async {
+  //   await FirebaseAuth.instance.signInWithEmailAndPassword(
+  //     email: emailController.text,
+  //     password: passwordController.text,
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +54,7 @@ class LoginPage extends StatelessWidget {
                   SizedBox(height: 25),
                   TextField(
                     decoration: InputDecoration(hintText: 'Email'),
-                    controller: usernameController,
+                    controller: emailController,
                   ),
                   // MyTextfield(
                   //   obscureText: false, // show value

@@ -35,3 +35,20 @@ class AuthService {
     return await auth.signOut();
   }
 }
+//  Future<String> signUp(String email, String pass, String name) async {
+//     String res = 'Some error';
+//     try {
+//       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+//         email: email,
+//         password: pass,
+//       );
+//       await firebaseFirestore
+//           .collection("users")
+//           .doc(userCredential.user!.uid)
+//           .set({'name': name, 'email': email, 'uid': userCredential.user!.uid});
+//       res = "Success";
+//     } on FirebaseAuthException catch (e) {
+//       throw Exception(e.code);
+//     }
+//     return res;
+//   }

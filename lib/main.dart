@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:personal_expense_tracker_app/datas/expanse_datas.dart';
+import 'package:personal_expense_tracker_app/pages/author_page.dart';
 import 'package:personal_expense_tracker_app/pages/expense_page.dart';
 import 'package:personal_expense_tracker_app/pages/login_page.dart';
 import 'package:personal_expense_tracker_app/pages/signup_page.dart';
@@ -30,10 +31,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       //theme: Provider.of<ThemeProvider>(context).themeData,
       // home: const IntroPage(),
-      initialRoute: '/login_page',
+      initialRoute: '/auth_page',
       routes: {
         '/login_page': (context) => LoginPage(),
-        // '/intro_page': (context) => const IntroPage(),
+        '/auth_page': (context) => const AuthPage(),
         '/home_page': (context) => const HomePage(),
         '/signup_page': (context) => SignUpPage(),
       },

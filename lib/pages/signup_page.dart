@@ -1,24 +1,58 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker_app/auth/auth_service.dart';
+import 'package:personal_expense_tracker_app/pages/expense_page.dart';
 import 'package:personal_expense_tracker_app/pages/login_page.dart';
 
-class SignUpPage extends StatelessWidget {
-  SignUpPage({super.key, this.onTap});
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
-  final conPasswordController = TextEditingController();
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key, this.onTap});
   final void Function()? onTap;
 
-  void signUp(BuildContext context) async {
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  final emailController = TextEditingController();
+
+  // final usernameController = TextEditingController();
+
+  final passwordController = TextEditingController();
+  bool isLoading = false;
+
+  final conPasswordController = TextEditingController();
+
+  void register() async {
+    // String res = await AuthService().signUp(
+    //   emailController.text,
+    //   passwordController.text,
+    //   usernameController.text,
+    // );
+    // if (res == "Success") {
+    //   setState(() {
+    //     isLoading = true;
+    //   });
+    //   Navigator.of(
+    //     context,
+    //   ).pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
+    // } else {
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    //   showDialog(
+    //     context: context,
+    //     builder: (context) => AlertDialog(title: Text(res)),
+    //   );
+    // }
     final auth = AuthService();
     if (passwordController.text == conPasswordController.text) {
       try {
-        await auth.signUp(usernameController.text, passwordController.text);
+        await auth.signUp(emailController.text, passwordController.text);
       } catch (e) {
         showDialog(
           context: context,
-          builder: (context) => AlertDialog(title: Text(e.toString())),
+          builder:
+              (context) => AlertDialog(title: Text("SignUp" + e.toString())),
         );
       }
     } else {
@@ -28,10 +62,6 @@ class SignUpPage extends StatelessWidget {
             (context) => AlertDialog(title: Text('Password don not matchs!')),
       );
     }
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: usernameController.text,
-      password: passwordController.text,
-    );
   }
 
   @override
@@ -59,9 +89,14 @@ class SignUpPage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 25),
+                  // TextField(
+                  //   decoration: InputDecoration(hintText: 'User name'),
+                  //   controller: usernameController,
+                  // ),
+                  SizedBox(height: 25),
                   TextField(
                     decoration: InputDecoration(hintText: 'Email'),
-                    controller: usernameController,
+                    controller: emailController,
                   ),
                   // MyTextfield(
                   //   obscureText: false, // show value
@@ -92,10 +127,7 @@ class SignUpPage extends StatelessWidget {
                   //   ],
                   // ),
                   SizedBox(height: 25),
-                  ElevatedButton(
-                    onPressed: () => signUp(context),
-                    child: Text("Sign Up"),
-                  ),
+                  ElevatedButton(onPressed: register, child: Text("Sign Up")),
                   //TextButton(onPressed: signInUser, child: Text('Sign In')),
                   // MyButton(
                   //   onTap: signInUser,
