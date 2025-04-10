@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker_app/auth/auth_service.dart';
 import 'package:personal_expense_tracker_app/pages/expense_page.dart';
+
 import 'package:personal_expense_tracker_app/pages/login_page.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -21,38 +21,33 @@ class _SignUpPageState extends State<SignUpPage> {
   bool isLoading = false;
 
   final conPasswordController = TextEditingController();
+  final auth = AuthService();
 
   void register() async {
-    // String res = await AuthService().signUp(
-    //   emailController.text,
-    //   passwordController.text,
-    //   usernameController.text,
-    // );
-    // if (res == "Success") {
-    //   setState(() {
-    //     isLoading = true;
-    //   });
-    //   Navigator.of(
-    //     context,
-    //   ).pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
-    // } else {
-    //   setState(() {
-    //     isLoading = false;
-    //   });
-    //   showDialog(
-    //     context: context,
-    //     builder: (context) => AlertDialog(title: Text(res)),
-    //   );
-    // }
-    final auth = AuthService();
     if (passwordController.text == conPasswordController.text) {
       try {
-        await auth.signUp(emailController.text, passwordController.text);
+        await auth.signUp(
+          emailController.text.trim(),
+          passwordController.text.trim(),
+        );
       } catch (e) {
         showDialog(
           context: context,
           builder:
-              (context) => AlertDialog(title: Text("SignUp" + e.toString())),
+              (context) => AlertDialog(
+                title: Text('Registration Successful!'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the dialog
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                      );
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              ),
         );
       }
     } else {

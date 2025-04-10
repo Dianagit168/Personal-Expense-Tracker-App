@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker_app/auth/auth_service.dart';
 
@@ -11,11 +12,15 @@ class LoginPage extends StatelessWidget {
   void signInUser(BuildContext context) async {
     final authService = AuthService();
     try {
-      await authService.signIn(emailController.text, passwordController.text);
-    } catch (e) {
+      await authService.signIn(
+        emailController.text.trim(),
+        passwordController.text.trim(),
+      );
+    } on FirebaseAuthException catch (e) {
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(title: Text(e.toString())),
+        builder:
+            (context) => AlertDialog(title: Text('Login failed: ${e.code}')),
       );
     }
   }
