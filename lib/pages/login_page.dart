@@ -1,29 +1,29 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:personal_expense_tracker_app/auth/auth_service.dart';
+import 'package:personal_expense_tracker_app/provider/auth_service.dart';
 
 import 'package:personal_expense_tracker_app/pages/signup_page.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void signInUser(BuildContext context) async {
-    final authService = AuthService();
-    try {
-      await authService.signIn(
-        emailController.text.trim(),
-        passwordController.text.trim(),
-      );
-    } on FirebaseAuthException catch (e) {
-      showDialog(
-        context: context,
-        builder:
-            (context) => AlertDialog(title: Text('Login failed: ${e.code}')),
-      );
-    }
-  }
+  // void signInUser(BuildContext context) async {
+  //   final authService = context.read<AuthService>();
+  //   try {
+  //     await authService.signIn(
+  //       emailController.text.trim(),
+  //       passwordController.text.trim(),
+  //     );
+  //   } on FirebaseAuthException catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder:
+  //           (context) => AlertDialog(title: Text('Login failed: ${e.code}')),
+  //     );
+  //   }
+  // }
   // void signInUser() async {
   //   await FirebaseAuth.instance.signInWithEmailAndPassword(
   //     email: emailController.text,
@@ -33,6 +33,7 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authService = context.read<AuthService>();
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: SafeArea(
@@ -91,7 +92,12 @@ class LoginPage extends StatelessWidget {
                   ),
                   SizedBox(height: 25),
                   ElevatedButton(
-                    onPressed: () => signInUser(context),
+                    onPressed: () {
+                      authService.signIn(
+                        emailController.text.trim(),
+                        passwordController.text.trim(),
+                      );
+                    },
                     child: Text("Sign In"),
                   ),
                   //TextButton(onPressed: signInUser, child: Text('Sign In')),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:personal_expense_tracker_app/auth/auth_service.dart';
-import 'package:personal_expense_tracker_app/pages/expense_page.dart';
+import 'package:personal_expense_tracker_app/provider/auth_service.dart';
 
 import 'package:personal_expense_tracker_app/pages/login_page.dart';
+import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key, this.onTap});
@@ -23,44 +23,9 @@ class _SignUpPageState extends State<SignUpPage> {
   final conPasswordController = TextEditingController();
   final auth = AuthService();
 
-  void register() async {
-    if (passwordController.text == conPasswordController.text) {
-      try {
-        await auth.signUp(
-          emailController.text.trim(),
-          passwordController.text.trim(),
-        );
-      } catch (e) {
-        showDialog(
-          context: context,
-          builder:
-              (context) => AlertDialog(
-                title: Text('Registration Successful!'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Close the dialog
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => HomePage()),
-                      );
-                    },
-                    child: Text('OK'),
-                  ),
-                ],
-              ),
-        );
-      }
-    } else {
-      showDialog(
-        context: context,
-        builder:
-            (context) => AlertDialog(title: Text('Password don not matchs!')),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final authService = context.read<AuthService>();
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: SafeArea(
@@ -122,7 +87,27 @@ class _SignUpPageState extends State<SignUpPage> {
                   //   ],
                   // ),
                   SizedBox(height: 25),
-                  ElevatedButton(onPressed: register, child: Text("Sign Up")),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (passwordController.text.trim() ==
+                          conPasswordController.text.trim()) {
+                        authService.signUp(
+                          emailController.text.trim(),
+                          passwordController.text.trim(),
+                          context,
+                        );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder:
+                              (context) => AlertDialog(
+                                title: Text('Password don not matchs!'),
+                              ),
+                        );
+                      }
+                    },
+                    child: Text("Sign Up"),
+                  ),
                   //TextButton(onPressed: signInUser, child: Text('Sign In')),
                   // MyButton(
                   //   onTap: signInUser,

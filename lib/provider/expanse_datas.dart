@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_expense_tracker_app/datas/hive_database.dart';
+import 'package:personal_expense_tracker_app/provider/hive_database.dart';
 import 'package:personal_expense_tracker_app/datetime/date_time_helper.dart';
 import 'package:personal_expense_tracker_app/models/expense_items.dart';
 

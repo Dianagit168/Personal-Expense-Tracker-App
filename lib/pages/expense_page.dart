@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:personal_expense_tracker_app/auth/auth_service.dart';
 import 'package:personal_expense_tracker_app/components/expense_summary.dart';
 import 'package:personal_expense_tracker_app/components/expense_tile.dart';
-import 'package:personal_expense_tracker_app/datas/expanse_datas.dart';
+import 'package:personal_expense_tracker_app/provider/auth_service.dart';
+import 'package:personal_expense_tracker_app/provider/expanse_datas.dart';
 import 'package:personal_expense_tracker_app/models/expense_items.dart';
 import 'package:provider/provider.dart';
 
@@ -64,11 +64,6 @@ class _HomePageState extends State<HomePage> {
 
   //Signout
 
-  void logOut() {
-    final auth = AuthService();
-    auth.signOut();
-  }
-
   //
   void addNewexpense() {
     showDialog(
@@ -112,6 +107,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = context.read<AuthService>();
     return Consumer<ExpanseDatasProvider>(
       builder: (
         BuildContext context,
@@ -122,7 +118,12 @@ class _HomePageState extends State<HomePage> {
           child: Scaffold(
             appBar: AppBar(
               actions: [
-                ElevatedButton(onPressed: logOut, child: Text("Sign Out")),
+                ElevatedButton(
+                  onPressed: () {
+                    authService.signOut();
+                  },
+                  child: Text("Sign Out"),
+                ),
                 //IconButton(onPressed: signUserOut, icon: Icon(Icons.logout)),
               ],
             ),

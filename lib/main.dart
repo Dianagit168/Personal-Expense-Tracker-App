@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:personal_expense_tracker_app/datas/expanse_datas.dart';
+
+import 'package:personal_expense_tracker_app/provider/auth_service.dart';
+import 'package:personal_expense_tracker_app/provider/expanse_datas.dart';
 import 'package:personal_expense_tracker_app/pages/author_page.dart';
 import 'package:personal_expense_tracker_app/pages/expense_page.dart';
 import 'package:personal_expense_tracker_app/pages/login_page.dart';
@@ -14,9 +16,12 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox("expense_database");
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ExpanseDatasProvider(),
-      builder: (context, child) => MyApp(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthService()),
+        ChangeNotifierProvider(create: (context) => ExpanseDatasProvider()),
+      ],
+      child: MyApp(),
     ),
   );
 }

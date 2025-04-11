@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:personal_expense_tracker_app/pages/expense_page.dart';
 
-class AuthService {
+class AuthService with ChangeNotifier {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   //SignIn
@@ -18,15 +20,37 @@ class AuthService {
 
   //signup
 
-  Future<UserCredential> signUp(String email, String pass) async {
+  Future<UserCredential?> signUp(
+    String email,
+    String pass,
+    BuildContext context,
+  ) async {
     try {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
         email: email,
         password: pass,
       );
       return userCredential;
-    } on FirebaseAuthException catch (e) {
-      throw Exception(e.code);
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder:
+            (context) => AlertDialog(
+              title: Text('Registration Successful!'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                      (route) => false,
+                    );
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+      );
+      return null;
     }
   }
 
