@@ -6,16 +6,42 @@ class AuthService with ChangeNotifier {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   //SignIn
-  Future<UserCredential> signIn(String email, String pass) async {
+  void signIn(String email, String pass, context) async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Center(child: CircularProgressIndicator());
+      },
+    );
     try {
-      UserCredential userCredential = await auth.signInWithEmailAndPassword(
-        email: email,
-        password: pass,
-      );
-      return userCredential;
+      await auth.signInWithEmailAndPassword(email: email, password: pass);
+      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      throw Exception(e.code);
+      if (e.code == 'user-not-found') {
+        Navigator.pop(context);
+        wrongEmailMessage(context);
+      } else if (e.code == 'wrong-password') {
+        wrongPassMessage(context);
+      }
     }
+  }
+
+  void wrongEmailMessage(context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(title: Text('Incorrect Email'));
+      },
+    );
+  }
+
+  void wrongPassMessage(context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(title: Text('Incorrect Password'));
+      },
+    );
   }
 
   //signup

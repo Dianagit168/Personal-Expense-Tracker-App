@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker_app/components/expense_summary.dart';
 import 'package:personal_expense_tracker_app/components/expense_tile.dart';
@@ -17,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   final newExpNameController = TextEditingController();
   final newExpDollarController = TextEditingController();
   final newExpCentController = TextEditingController();
+  final email = FirebaseAuth.instance.currentUser?.email;
 
   @override
   void initState() {
@@ -158,6 +160,8 @@ class _HomePageState extends State<HomePage> {
                       );
                     },
                   ),
+                  SizedBox(height: 30),
+                  Text('Login as $email '),
                 ],
               ),
             ),

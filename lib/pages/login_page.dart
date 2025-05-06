@@ -1,35 +1,83 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker_app/provider/auth_service.dart';
 
 import 'package:personal_expense_tracker_app/pages/signup_page.dart';
 import 'package:provider/provider.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
-  // void signInUser(BuildContext context) async {
-  //   final authService = context.read<AuthService>();
-  //   try {
-  //     await authService.signIn(
-  //       emailController.text.trim(),
-  //       passwordController.text.trim(),
-  //     );
-  //   } on FirebaseAuthException catch (e) {
-  //     showDialog(
-  //       context: context,
-  //       builder:
-  //           (context) => AlertDialog(title: Text('Login failed: ${e.code}')),
-  //     );
-  //   }
-  // }
-  // void signInUser() async {
-  //   await FirebaseAuth.instance.signInWithEmailAndPassword(
-  //     email: emailController.text,
-  //     password: passwordController.text,
-  //   );
-  // }
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final emailController = TextEditingController();
+
+  final passwordController = TextEditingController();
+  final auth = FirebaseAuth.instance;
+
+  void signIn() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Center(child: CircularProgressIndicator());
+      },
+    );
+    try {
+      await auth.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+      print('Error code: ${e.code}');
+
+      // if (e.code == 'user-not-found') {
+      //   print('Incorrect Email');
+      //   wrongEmailMessage();
+      // } else if (e.code == 'wrong-password') {
+      //   print('Incorrect Password');
+      //   wrongPassMessage();
+      // }
+
+      if (e.code == 'invalid-credential') {
+        print('Invalid credentials');
+        wrongEmailOrPasswordMessage(); // handle both
+      } else {
+        print('Unhandled error: ${e.message}');
+      }
+    }
+  }
+
+  void wrongEmailOrPasswordMessage() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(title: Text('Email or Password is incorrect'));
+      },
+    );
+  }
+
+  void wrongEmailMessage() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(title: Text('Incorrect Email'));
+      },
+    );
+  }
+
+  void wrongPassMessage() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(title: Text('Incorrect Password'));
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,15 +139,7 @@ class LoginPage extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 25),
-                  ElevatedButton(
-                    onPressed: () {
-                      authService.signIn(
-                        emailController.text.trim(),
-                        passwordController.text.trim(),
-                      );
-                    },
-                    child: Text("Sign In"),
-                  ),
+                  ElevatedButton(onPressed: signIn, child: Text("Sign In")),
                   //TextButton(onPressed: signInUser, child: Text('Sign In')),
                   // MyButton(
                   //   onTap: signInUser,
