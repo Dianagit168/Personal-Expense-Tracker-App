@@ -1,12 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:personal_expense_tracker_app/provider/auth_service.dart';
-
-import 'package:personal_expense_tracker_app/pages/signup_page.dart';
+import 'package:personal_expense_tracker_app/components/my_btn.dart';
+import 'package:personal_expense_tracker_app/components/my_textfild.dart';
+import 'package:personal_expense_tracker_app/provider/google_login_provider.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final Function()? onTap;
+  const LoginPage({super.key, this.onTap});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -14,7 +15,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
-
   final passwordController = TextEditingController();
   final auth = FirebaseAuth.instance;
 
@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
-      print('Error code: ${e.code}');
+      print('Error code: ${e.code.characters}');
 
       // if (e.code == 'user-not-found') {
       //   print('Incorrect Email');
@@ -81,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final authService = context.read<AuthService>();
+    // final authService = context.read<AuthService>();
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: SafeArea(
@@ -91,40 +91,44 @@ class _LoginPageState extends State<LoginPage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                //crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
+                  // Text(
+                  //   'Personal Expense Tracker',
+                  //   style: TextStyle(
+                  //     color: Colors.grey[700],
+                  //     fontWeight: FontWeight.bold,
+                  //     fontSize: 40,
+                  //   ),
+                  //   // strutStyle:StrutStyle() ,
+                  // ),
                   SizedBox(height: 50),
                   Icon(Icons.lock, size: 100),
-                  SizedBox(height: 50),
+                  SizedBox(height: 30),
+
                   Text(
-                    'Welcome',
+                    'Please Login to continue',
                     //     'Welcome back you\'ve been missed!'
                     style: TextStyle(
                       color: Colors.grey[700],
                       fontWeight: FontWeight.bold,
-                      fontSize: 35,
+                      fontSize: 18,
                     ),
                   ),
                   SizedBox(height: 25),
-                  TextField(
-                    decoration: InputDecoration(hintText: 'Email'),
+
+                  MyTextfield(
+                    obscureText: false, // show value
+                    hintText: 'Username',
                     controller: emailController,
                   ),
-                  // MyTextfield(
-                  //   obscureText: false, // show value
-                  //   hintText: 'Username',
-                  //   controller: usernameController,
-                  // ),
                   SizedBox(height: 25),
-                  TextField(
-                    decoration: InputDecoration(hintText: 'Password'),
+
+                  MyTextfield(
+                    obscureText: true,
+                    hintText: 'Password',
                     controller: passwordController,
                   ),
-                  // MyTextfield(
-                  //   obscureText: true,
-                  //   hintText: 'Password',
-                  //   controller: passwordController,
-                  // ),
                   SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -139,53 +143,46 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                   SizedBox(height: 25),
-                  ElevatedButton(onPressed: signIn, child: Text("Sign In")),
-                  //TextButton(onPressed: signInUser, child: Text('Sign In')),
-                  // MyButton(
-                  //   onTap: signInUser,
-                  //   text: 'Sign In',
-                  // ),
+                  MyBotton(onTap: signIn, btnName: "Sign In"),
+
+                  SizedBox(height: 30),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Divider(color: Colors.grey[400], thickness: 0.5),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          'Or continue with',
+                          style: TextStyle(color: Colors.grey[700]),
+                        ),
+                      ),
+                      Expanded(
+                        child: Divider(color: Colors.grey[400], thickness: 0.5),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 30),
+                  GestureDetector(
+                    onTap: () {
+                      context.read<GoogleLoginProvider>().googleLogin();
+                      print('Press Login Google');
+                    },
+                    child: Image.network(
+                      height: 60,
+                      width: 60,
+                      'https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-1024.png',
+                    ),
+                  ),
                   SizedBox(height: 50),
-                  // Row(
-                  //   children: [
-                  //     Expanded(
-                  //       child: Divider(color: Colors.grey[400], thickness: 0.5),
-                  //     ),
-                  //     Padding(
-                  //       padding: const EdgeInsets.symmetric(horizontal: 10),
-                  //       child: Text(
-                  //         'Or continue with',
-                  //         style: TextStyle(color: Colors.grey[700]),
-                  //       ),
-                  //     ),
-                  //     Expanded(
-                  //       child: Divider(color: Colors.grey[400], thickness: 0.5),
-                  //     ),
-                  //   ],
-                  // ),
-                  // SizedBox(height: 50),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     SqareTile(imagePath: 'lib/images/google.png'),
-                  //     SizedBox(width: 10),
-                  //     SqareTile(imagePath: 'lib/images/apple.png'),
-                  //   ],
-                  // ),
-                  // SizedBox(height: 50),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('Not a member?'),
                       SizedBox(width: 4),
                       TextButton(
-                        onPressed:
-                            () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SignUpPage(),
-                              ),
-                            ),
+                        onPressed: widget.onTap,
                         child: Text('Register now'),
                       ),
                     ],

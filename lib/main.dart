@@ -8,6 +8,7 @@ import 'package:personal_expense_tracker_app/pages/author_page.dart';
 import 'package:personal_expense_tracker_app/pages/expense_page.dart';
 import 'package:personal_expense_tracker_app/pages/login_page.dart';
 import 'package:personal_expense_tracker_app/pages/signup_page.dart';
+import 'package:personal_expense_tracker_app/provider/google_login_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -20,6 +21,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => AuthService()),
         ChangeNotifierProvider(create: (context) => ExpanseDatasProvider()),
+        ChangeNotifierProvider(create: (context) => GoogleLoginProvider()),
       ],
       child: MyApp(),
     ),
@@ -41,7 +43,7 @@ class MyApp extends StatelessWidget {
         '/login_page': (context) => LoginPage(),
         '/auth_page': (context) => const AuthPage(),
         '/home_page': (context) => const HomePage(),
-        '/signup_page': (context) => SignUpPage(),
+        '/signup_page': (context) => RegisterPage(),
       },
     );
   }

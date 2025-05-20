@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker_app/components/expense_summary.dart';
 import 'package:personal_expense_tracker_app/components/expense_tile.dart';
-import 'package:personal_expense_tracker_app/provider/auth_service.dart';
+import 'package:personal_expense_tracker_app/components/my_btn.dart';
 import 'package:personal_expense_tracker_app/provider/expanse_datas.dart';
 import 'package:personal_expense_tracker_app/models/expense_items.dart';
 import 'package:provider/provider.dart';
@@ -107,9 +107,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void signOut() async {
+    return await FirebaseAuth.instance.signOut();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final authService = context.read<AuthService>();
     return Consumer<ExpanseDatasProvider>(
       builder: (
         BuildContext context,
@@ -118,17 +121,6 @@ class _HomePageState extends State<HomePage> {
       ) {
         return SafeArea(
           child: Scaffold(
-            appBar: AppBar(
-              actions: [
-                ElevatedButton(
-                  onPressed: () {
-                    authService.signOut();
-                  },
-                  child: Text("Sign Out"),
-                ),
-                //IconButton(onPressed: signUserOut, icon: Icon(Icons.logout)),
-              ],
-            ),
             backgroundColor: Colors.grey[300],
             floatingActionButton: FloatingActionButton(
               backgroundColor: Colors.blue,
@@ -161,7 +153,18 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                   SizedBox(height: 30),
-                  Text('Login as $email '),
+                  Center(
+                    child: Text(
+                      'Loged: $email ',
+                      style: TextStyle(
+                        color: Colors.grey[700],
+                        // fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Center(child: MyBotton(onTap: signOut, btnName: 'Sign Out')),
                 ],
               ),
             ),

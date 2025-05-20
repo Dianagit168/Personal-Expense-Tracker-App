@@ -1,19 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:personal_expense_tracker_app/provider/auth_service.dart';
+import 'package:personal_expense_tracker_app/components/my_btn.dart';
+import 'package:personal_expense_tracker_app/components/my_textfild.dart';
 
-import 'package:personal_expense_tracker_app/pages/login_page.dart';
-import 'package:provider/provider.dart';
-
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key, this.onTap});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key, this.onTap});
   final void Function()? onTap;
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
 
   final passwordController = TextEditingController();
@@ -61,7 +59,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    final authService = context.read<AuthService>();
+    // final authService = context.read<AuthService>();
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: SafeArea(
@@ -77,7 +75,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Icon(Icons.lock, size: 100),
                   SizedBox(height: 50),
                   Text(
-                    'Welcome back you\'ve been missed!',
+                    'Let\'s create an account for you!',
                     style: TextStyle(
                       color: Colors.grey[700],
                       fontWeight: FontWeight.bold,
@@ -85,50 +83,27 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                   SizedBox(height: 25),
-                  // TextField(
-                  //   decoration: InputDecoration(hintText: 'User name'),
-                  //   controller: usernameController,
-                  // ),
-                  SizedBox(height: 25),
-                  TextField(
-                    decoration: InputDecoration(hintText: 'Email'),
+
+                  MyTextfield(
+                    obscureText: false, // show value
+                    hintText: 'Username',
                     controller: emailController,
                   ),
-                  // MyTextfield(
-                  //   obscureText: false, // show value
-                  //   hintText: 'Username',
-                  //   controller: usernameController,
-                  // ),
                   SizedBox(height: 25),
-                  TextField(
-                    decoration: InputDecoration(hintText: 'Password'),
+                  MyTextfield(
+                    obscureText: false, // show value
+                    hintText: 'Password',
                     controller: passwordController,
                   ),
                   SizedBox(height: 25),
-                  TextField(
-                    decoration: InputDecoration(hintText: 'Confirm Password'),
+                  MyTextfield(
+                    obscureText: false, // show value
+                    hintText: 'Confirm Password',
                     controller: conPasswordController,
                   ),
-                  SizedBox(height: 10),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.end,
-                  //   children: [
-                  //     Text(
-                  //       'Forgot Password?',
-                  //       style: TextStyle(
-                  //         color: Colors.grey[600],
-                  //         fontWeight: FontWeight.bold,
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
+
                   SizedBox(height: 25),
-                  ElevatedButton(onPressed: signUpUser, child: Text("Sign Up")),
-                  //TextButton(onPressed: signInUser, child: Text('Sign In')),
-                  // MyButton(
-                  //   onTap: signInUser,
-                  //   text: 'Sign In',
-                  // ),
+                  MyBotton(onTap: signUpUser, btnName: "Sign Up"),
                   SizedBox(height: 50),
                   // Row(
                   //   children: [
@@ -163,13 +138,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       Text('You are member?'),
                       SizedBox(width: 4),
                       TextButton(
-                        onPressed:
-                            () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => LoginPage(),
-                              ),
-                            ),
+                        onPressed: widget.onTap,
+
                         child: Text('Log In'),
                       ),
                     ],
